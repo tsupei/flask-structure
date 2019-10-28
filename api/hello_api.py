@@ -17,6 +17,7 @@ def hello():
         "text": "hello! <user_id>"
     }
     '''
+
     # Retrieve Data
     req = request.get_json()
 
