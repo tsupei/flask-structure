@@ -59,7 +59,7 @@ https://127.0.0.1:47000/autocomplete/api/v1/opinion
 
 ```
 
-# term api
+# Func 1: term api
 
 Request:
 
@@ -86,7 +86,7 @@ Response:
 }
 ```
 
-# law api
+# Func 2: law api
 
 Request:
 
@@ -117,7 +117,7 @@ Response:
 }
 ```
 
-# term api
+# Func 3 : opinion api
 
 Request:
 
