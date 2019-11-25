@@ -125,7 +125,7 @@ Request:
 $ curl -X POST \
 -H "Content-Type: application/json" \
 -d '{"keyword" : '新型', "complete" : true, "limit": 5}' \
-"http://127.0.0.1:47000/autocomplete/api/v1/law"
+"http://127.0.0.1:47000/autocomplete/api/v1/opinion"
 
 ```
 
