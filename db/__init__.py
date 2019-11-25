@@ -1,0 +1,1 @@
+from db.mongodb import QuoteCollection, LawCollection, OpinionCollection
