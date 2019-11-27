@@ -25,9 +25,10 @@ class QuoteCollection(MongoCollection):
     def search(self, keyword, complete):
         quotes = list(self.collection.find({
             "quote": {
-                    '$regex': '{}.*'.format(keyword)
+                '$regex': '^{}.*'.format(keyword)
             }
         }))
+        print(quotes)
         match = set()
         for quote in quotes:
             match.add(quote["quote"])
@@ -50,7 +51,7 @@ class LawCollection(MongoCollection):
     def search(self, keyword, complete, description):
         laws = list(self.collection.find({
             "name": {
-                    '$regex': '{}.*'.format(keyword)
+                    '$regex': '^{}.*'.format(keyword)
             }
         }))
         match = []
