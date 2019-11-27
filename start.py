@@ -4,7 +4,6 @@ from flask_cors import CORS
 from config import init_db
 from api import hello_api, term_api, law_api, opinion_api
 
-
 def main():
     app = Flask(__name__)
     # Cross-Origin Resource Sharing

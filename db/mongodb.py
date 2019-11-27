@@ -23,12 +23,14 @@ class QuoteCollection(MongoCollection):
         return "quotes"
 
     def search(self, keyword, complete):
-        quotes = list(self.collection.find())
+        quotes = list(self.collection.find({
+            "quote": {
+                    '$regex': '{}.*'.format(keyword)
+            }
+        }))
         match = set()
         for quote in quotes:
-            if keyword in quote["quote"]:
-                if keyword == quote['quote'][:len(keyword)]:
-                    match.add(quote["quote"])
+            match.add(quote["quote"])
         match = list(match)
         if not complete:
             match = [quote[len(keyword):] for quote in match]
@@ -46,15 +48,17 @@ class LawCollection(MongoCollection):
         return "law"
 
     def search(self, keyword, complete, description):
-        laws = list(self.collection.find())
+        laws = list(self.collection.find({
+            "name": {
+                    '$regex': '{}.*'.format(keyword)
+            }
+        }))
         match = []
         for law in laws:
-            if keyword in law["name"]:
-                if keyword == law['name'][:len(keyword)]:
-                    match.append({
-                        "name": law["name"],
-                        "description": law["description"]
-                    })
+            match.append({
+                "name": law["name"],
+                "description": law["description"]
+            })
         if not complete:
             match = [{"name": law["name"][len(keyword):], "description": law["description"]} for law in match]
             match = filter(lambda x:x["name"], match)
@@ -84,25 +88,12 @@ class OpinionCollection(MongoCollection):
                 valid_concept[opinion["concept"]].append(opinion["description"])
         match = []
         for key, value in valid_concept.items():
+            if not value:
+                continue
             match.append({
                 "concept": key if complete else key[len(keyword):],
                 "descriptions": value,
                 "count": len(value) 
             })
         return match
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
