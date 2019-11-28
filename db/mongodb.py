@@ -29,15 +29,21 @@ class QuoteCollection(MongoCollection):
 
         cur_text = ""
         best_res = []
-        for char in sent:
+        i = 0
+        while i < len(sent):
+            char = sent[i]
             cur_text += char
             match = set()
+            print(char, cur_text)
             for quote in quotes:
                 if quote["quote"].startswith(cur_text):
                     match.add(quote["quote"])
             if match:
                 best_res = list(match)
+                i += 1
             else:
+                if len(cur_text) == 1:
+                    i += 1
                 cur_text = ""
         if not complete:
             best_res = [quote[len(keyword):] for quote in best_res]
@@ -76,7 +82,9 @@ class LawCollection(MongoCollection):
 
         cur_text = ""
         best_res = []
-        for char in sent:
+        i = 0
+        while i < len(sent):
+            char = sent[i]
             cur_text += char
             match = []
             for law in laws:
@@ -87,7 +95,10 @@ class LawCollection(MongoCollection):
                     })
             if match:
                 best_res = match
+                i += 1
             else:
+                if len(cur_text) == 1:
+                    i += 1
                 cur_text = ""
         if not complete:
             best_res = [law[len(keyword):] for law in best_res]
@@ -128,7 +139,8 @@ class OpinionCollection(MongoCollection):
 
         cur_text = ""
         best_res = []
-        for char in sent:
+        i = 0
+        while i < len(sent):
             cur_text += char
             match = []
             valid_concept = {}
@@ -149,7 +161,10 @@ class OpinionCollection(MongoCollection):
                         })
             if match:
                 best_res = match
+                i += 1
             else:
+                if len(cur_text) == 1:
+                    i += 1
                 cur_text = ""
         return cur_text, match
 
