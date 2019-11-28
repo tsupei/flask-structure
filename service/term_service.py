@@ -9,6 +9,6 @@ class TermService(object):
 
     def find_candicates(self, keyword, complete=True):
         quote_collection = QuoteCollection(self.database)
-        return quote_collection.search(keyword, complete)
+        return quote_collection.smart_search(keyword, complete)
 
 

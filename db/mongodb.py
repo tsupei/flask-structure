@@ -22,13 +22,34 @@ class QuoteCollection(MongoCollection):
     def get_collection_name(self):
         return "quotes"
 
+    def smart_search(self, sent, complete):
+        # At most trace back to ten characters
+        sent = sent[-10:]
+        quotes = list(self.collection.find())
+
+        cur_text = ""
+        best_res = []
+        for char in sent:
+            cur_text += char
+            match = set()
+            for quote in quotes:
+                if quote["quote"].startswith(cur_text):
+                    match.add(quote["quote"])
+            if match:
+                best_res = list(match)
+            else:
+                cur_text = ""
+        if not complete:
+            best_res = [quote[len(keyword):] for quote in best_res]
+            best_res = filter(lambda x:x, best_res)
+        return cur_text, sorted(best_res, key=lambda  k: len(k))
+
     def search(self, keyword, complete):
         quotes = list(self.collection.find({
             "quote": {
                 '$regex': '^{}.*'.format(keyword)
             }
         }))
-        print(quotes)
         match = set()
         for quote in quotes:
             match.add(quote["quote"])
@@ -48,7 +69,32 @@ class LawCollection(MongoCollection):
     def get_collection_name(self):
         return "law"
 
-    def search(self, keyword, complete, description):
+    def smart_search(self, sent, complete):
+        # At most trace back to ten characters
+        sent = sent[-10:]
+        laws = list(self.collection.find())
+
+        cur_text = ""
+        best_res = []
+        for char in sent:
+            cur_text += char
+            match = []
+            for law in laws:
+                if law["name"].startswith(cur_text):
+                    match.append({
+                        "name": law["name"],
+                        "description": law["description"]
+                    })
+            if match:
+                best_res = match
+            else:
+                cur_text = ""
+        if not complete:
+            best_res = [law[len(keyword):] for law in best_res]
+            best_res = filter(lambda x:x, best_res)
+        return cur_text, sorted(best_res, key=lambda  k: len(k))
+
+    def search(self, keyword, complete):
         laws = list(self.collection.find({
             "name": {
                     '$regex': '^{}.*'.format(keyword)
@@ -74,6 +120,38 @@ class OpinionCollection(MongoCollection):
 
     def get_collection_name(self):
         return "opinion"
+
+    def smart_search(self, sent, complete):
+        # At most trace back to ten characters
+        sent = sent[-10:]
+        opinions = list(self.collection.find())
+
+        cur_text = ""
+        best_res = []
+        for char in sent:
+            cur_text += char
+            match = []
+            valid_concept = {}
+            for opinion in opinions:
+                if opinion["concept"].startswith(cur_text):
+                    if opinion["concept"] not in valid_concept:
+                        valid_concept[opinion["concept"]] = [opinion["description"]]
+                    else:
+                        valid_concept[opinion["concept"]].append(opinion["description"])
+                    match = []
+                    for key, value in valid_concept.items():
+                        if not value:
+                            continue
+                        match.append({
+                            "concept": key if complete else key[len(keyword):],
+                            "descriptions": value,
+                            "count": len(value) 
+                        })
+            if match:
+                best_res = match
+            else:
+                cur_text = ""
+        return cur_text, match
 
     def search(self, keyword, complete):
         opinions = list(self.collection.find({

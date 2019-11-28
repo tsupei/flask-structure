@@ -9,6 +9,6 @@ class OpinionService(object):
 
     def find_candicates(self, keyword, complete=True):
         opinion_collection = OpinionCollection(self.database)
-        return opinion_collection.search(keyword, complete)
+        return opinion_collection.smart_search(keyword, complete)
 
 

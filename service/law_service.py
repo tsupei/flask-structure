@@ -9,6 +9,6 @@ class LawService(object):
 
     def find_candicates(self, keyword, complete=True, description=True):
         law_collection = LawCollection(self.database)
-        return law_collection.search(keyword, complete, description)
+        return law_collection.smart_search(keyword, complete)
 
 

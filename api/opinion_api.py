@@ -62,13 +62,13 @@ def opinion():
 
         # Service
         opinion_service = OpinionService(current_app.config["database"])
-        match = opinion_service.find_candicates(keyword, complete=complete)
+        cur_text, match = opinion_service.find_candicates(keyword, complete=complete)
 
         payload["data"] = {
             "opinions": match,
             "count": len(match),
             "isFound": True if match else False,
-            "keyword": keyword
+            "keyword": cur_text
         }
         payload["message"] = "Success"
         payload["errorCode"] = "000"

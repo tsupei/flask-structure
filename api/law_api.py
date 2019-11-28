@@ -57,7 +57,7 @@ def law():
 
         # Service
         law_service = LawService(current_app.config["database"])
-        match = law_service.find_candicates(keyword, complete=complete, description=description)
+        cur_text, match = law_service.find_candicates(keyword, complete=complete, description=description)
         if limit != 0:
             match = match[:limit]
 
@@ -65,7 +65,7 @@ def law():
             "laws": match,
             "count": len(match),
             "isFound": True if match else False,
-            "keyword": keyword
+            "keyword": cur_text
         }
         payload["message"] = "Success"
         payload["errorCode"] = "000"

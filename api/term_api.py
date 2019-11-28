@@ -56,7 +56,7 @@ def term():
 
         # Service
         term_service = TermService(current_app.config["database"])
-        match = term_service.find_candicates(keyword, complete=complete)
+        cur_text, match = term_service.find_candicates(keyword, complete=complete)
         if limit != 0:
             match = match[:limit]
 
@@ -64,7 +64,7 @@ def term():
             "terms": match,
             "count": len(match),
             "isFound": True if match else False,
-            "keyword": keyword
+            "keyword": cur_text
         }
         payload["message"] = "Success"
         payload["errorCode"] = "000"
