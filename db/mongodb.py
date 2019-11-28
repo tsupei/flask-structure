@@ -28,7 +28,7 @@ class QuoteCollection(MongoCollection):
         quotes = list(self.collection.find())
 
         cur_text = ""
-        best_res = []
+        last_res = []
         i = 0
         while i < len(sent):
             char = sent[i]
@@ -39,16 +39,16 @@ class QuoteCollection(MongoCollection):
                 if quote["quote"].startswith(cur_text):
                     match.add(quote["quote"])
             if match:
-                best_res = list(match)
                 i += 1
             else:
                 if len(cur_text) == 1:
                     i += 1
                 cur_text = ""
+            last_res = list(match)
         if not complete:
-            best_res = [quote[len(keyword):] for quote in best_res]
-            best_res = filter(lambda x:x, best_res)
-        return cur_text, sorted(best_res, key=lambda  k: len(k))
+            last_res = [quote[len(keyword):] for quote in last_res]
+            last_res = filter(lambda x:x, last_res)
+        return cur_text, sorted(last_res, key=lambda  k: len(k))
 
     def search(self, keyword, complete):
         quotes = list(self.collection.find({
@@ -81,7 +81,7 @@ class LawCollection(MongoCollection):
         laws = list(self.collection.find())
 
         cur_text = ""
-        best_res = []
+        last_res = []
         i = 0
         while i < len(sent):
             char = sent[i]
@@ -93,17 +93,18 @@ class LawCollection(MongoCollection):
                         "name": law["name"],
                         "description": law["description"]
                     })
+
             if match:
-                best_res = match
                 i += 1
             else:
                 if len(cur_text) == 1:
                     i += 1
                 cur_text = ""
+            last_res = match
         if not complete:
-            best_res = [law[len(keyword):] for law in best_res]
-            best_res = filter(lambda x:x, best_res)
-        return cur_text, sorted(best_res, key=lambda  k: len(k))
+            last_res = [law[len(keyword):] for law in last_res]
+            last_res = filter(lambda x:x, last_res)
+        return cur_text, sorted(last_res, key=lambda  k: len(k))
 
     def search(self, keyword, complete):
         laws = list(self.collection.find({
@@ -138,9 +139,10 @@ class OpinionCollection(MongoCollection):
         opinions = list(self.collection.find())
 
         cur_text = ""
-        best_res = []
+        last_res = []
         i = 0
         while i < len(sent):
+            char = sent[i]
             cur_text += char
             match = []
             valid_concept = {}
@@ -160,13 +162,13 @@ class OpinionCollection(MongoCollection):
                             "count": len(value) 
                         })
             if match:
-                best_res = match
                 i += 1
             else:
                 if len(cur_text) == 1:
                     i += 1
                 cur_text = ""
-        return cur_text, match
+            last_res = match
+        return cur_text, last_res
 
     def search(self, keyword, complete):
         opinions = list(self.collection.find({
