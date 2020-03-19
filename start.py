@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 from flask_cors import CORS
-from api import hello_api
-
+from config import init
+from api import order_api
 
 def main():
     app = Flask(__name__)
@@ -16,8 +16,12 @@ def main():
     # app.config["env"] =
     # ...
 
-    prefix = "/{}/{}/{}".format("test", "api", "v1")
-    app.register_blueprint(hello_api, url_prefix=prefix)
+    prefix = "/{}/{}/{}".format("drinkbot", "api", "v1")
+    # current app
+    with app.app_context():
+        init()
+        app.register_blueprint(order_api, url_prefix=prefix)
+
     app.run(host="127.0.0.1", port="47000", threaded=True)
 
 
