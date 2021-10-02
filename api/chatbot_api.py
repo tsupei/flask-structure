@@ -42,6 +42,6 @@ def handle_message(event):
             token=event.reply_token,
             search_stock_price_text="查詢股價",
             search_stock_code_text="查詢股票代號",
-            search_foreign_investmenet_text="查詢外資買賣超"
+            search_foreign_investment_text="查詢外資買賣超"
     )
     replier.handle(user_message)
