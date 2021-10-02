@@ -12,7 +12,7 @@ class StockReplier(object):
         self.search_stock_code_text = search_stock_code_text
         self.search_foreign_investment_text = search_foreign_investment_text
 
-    def handle(self, token, user_message):
+    def handle(self, user_message):
         if user_message == self.search_stock_price_text:
             self.menu_search_stock_price()
             return
