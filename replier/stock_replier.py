@@ -1,10 +1,10 @@
 import twstock
 from linebot.models import (
-       QuickReply, QuickReplybutton, TextSendMessage, MessageAction
+       QuickReply, QuickReplyButton, TextSendMessage, MessageAction
 )
 
 
-class StcokReplier(object):
+class StockReplier(object):
     def __init__(self, line_bot_api, token, search_stock_price_text, search_stock_code_text, search_foreign_investment_text):
         self.line_bot_api = line_bot_api
         self.token = token
@@ -30,7 +30,7 @@ class StcokReplier(object):
 
     def menu_search_stock_price(self):
         stock_list = [(2609, "陽明"), (2330, "台積電")]
-        quick_stock_menu = [QuickReplybutton(action=MessageAction(label="{}".format(stock_name),
+        quick_stock_menu = [QuickReplyButton(action=MessageAction(label="{}".format(stock_name),
                                              text="{} {}".format(self.search_stock_price_text, stock_id))) for stock_id, stock_name in stock_list]
         quick_button_menu = TextSendMessage(text="點選下方股票名稱查詢，或者直接輸入「查詢股價 2330」查詢股價", quick_reply=QuickReply(items=quick_stock_menu))
         self.line_bot_api.reply_message(self.token, quick_button_menu)
